@@ -1,0 +1,223 @@
+
+{% extends 'base.html' %}
+{% block content %}
+
+<style>
+  .form-group-text {
+       margin-bottom: 20px;
+   }
+    .form-group-box{
+      margin-bottom: 15px;
+    }
+
+  .form-group-text {
+        margin-bottom: 20px;
+    }
+
+     select#category {
+        width: 275px;
+        height: 40px;
+
+    }
+      select#subcategory {
+        width: 275px;
+      height: 40px;
+
+    }
+   .form-group-title{
+      margin-bottom: 20px;
+    }
+
+
+
+    /* Styling for the popup container */
+  #popup {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background-color: #fff;
+    padding: 20px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    border-radius: 4px;
+    z-index: 9999;
+  }
+
+  /* Styling for the close button */
+  #closePopup {
+    background-color: #007bff;
+    color: #fff;
+    border: none;
+    padding: 8px 16px;
+    border-radius: 4px;
+    cursor: pointer;
+  }
+
+
+
+
+
+
+</style>
+
+
+<div class="container" style="width: 300px; height: 400px; margin: 0 auto;">
+    <div class="row">
+        <form method="post" action="{% url 'submit_form' %}" class="mb-3 shadow" style="width: 300px; height: 1000px; margin: 0 auto;">
+             {% csrf_token %}
+
+
+
+<div class="form-group">
+     <label for="name">Name</label>
+     <input type="text" class="form-control" name="first_name" placeholder="enter name" required><br>
+</div>
+
+<div class="form-group">
+    <label for="name">Age</label>
+    <input type="number" class="form-control" name="age"  id="age" placeholder="Enter age"><br>
+</div>
+
+<div class="form-group">
+    <label for="name">Email</label>
+    <input type="email" class="form-control" name="email" id="email" placeholder="Enter email" required><br>
+</div>
+
+<div class="form-group">
+    <label for="name">Phone</label>
+    <input type="tel"  class="form-control" name="phone" id="phone" placeholder="Enter phone number" required><br>
+</div>
+
+<div class="form-group">
+    <label for="name">DOB</label>
+     <input type="date" class="form-control" name="dob" id="dob" required><br>
+</div>
+
+<div class="form-group">
+    <label for="name">Address</label>
+     <textarea class="form-control" name="address" id="address" placeholder="Enter address" required></textarea><br>
+</div>
+
+<div class="form-group-text">
+    <label for="name">Gender</label><br>
+     <input type="radio"  name="gender" id="male" value="male" required>
+        <label for="male">Male</label>
+        <input type="radio" name="gender" id="female" value="female" required>
+        <label for="female">Female</label>
+        <input type="radio" name="gender" id="other" value="other" required>
+        <label for="other">Other</label><br>
+</div>
+
+<div class="form-group-title">
+    <label for="name">Department</label><br>
+     <select id="category">
+        <option value="" selected></option>
+        {% for category in categories %}
+            <option value="{{ category.id }}">{{ category.name }}</option>
+        {% endfor %}
+    </select><br>
+</div>
+
+<div class="form-group-title">
+    <label for="name">Courses</label><br>
+        <select id="subcategory">
+        <option value="" selected></option>
+    </select><br>
+</div>
+
+<div class="form-group">
+    <label for="name">Purpose</label>
+       <select class="form-control" name="dropdown" id="district">
+            <option selected>Choose Purpose</option>
+           <option value="item1">builds knowledge </option>
+           <option value="item2">understanding of a subject</option>
+           <option value="item3"> prepares you for your future</option>
+           <option value="item4">starting a new job</option>
+           <option value="item5">apprenticeship</option>
+        </select><br>
+</div>
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script>
+        $(document).ready(function() {
+            $("#category").change(function() {
+                var category_id = $(this).val();
+                $("#subcategory").empty().prop('disabled', true);
+
+                if (category_id) {
+                    $.ajax({
+                        url: '/get_subcategories/', // URL to the view that retrieves subcategories
+                        data: {'category_id': category_id},
+                        dataType: 'json',
+                        success: function(data) {
+                            if (data.length > 0) {
+                                $("#subcategory").prop('disabled', false);
+                                for (var i = 0; i < data.length; i++) {
+                                    $("#subcategory").append(
+                                        '<option value="' + data[i].id + '">' + data[i].name + '</option>'
+                                    );
+                                }
+                            }
+                        }
+                    });
+                }
+            });
+        });
+    </script>
+<div class="form-group-box">
+    <label style=" margin-bottom: 4px;" for="name">Materials</label><br>
+        <label for="check_box">Pen</label>
+       <input type="checkbox" class="btn-group "  name="check_box" id="check_box1">
+    <label for="check_box">Note book</label>
+    <input type="checkbox" class="btn-group" name="check_box" id="check_box2">
+    <label for="check_box">Exam papper</label>
+    <input type="checkbox" class="btn-group" name="check_box" id="check_box3"><br>
+</div>
+
+
+
+<input type="submit" class="btn btn-success" value="Submit">
+
+
+
+
+
+
+             </form>
+
+    </div>
+</div>
+
+
+{% endblock %}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
